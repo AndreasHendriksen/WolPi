@@ -1,0 +1,8 @@
+#root{
+    background-image: url('https://picsum.photos/id/84/1920/1200/?blur=10');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center center;
+    height: 100vh;
+}

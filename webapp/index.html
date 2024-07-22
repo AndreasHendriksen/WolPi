@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>WoLPi</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <link href="styles.css" rel="stylesheet" />
+
+    <!-- Bootstrap CSS v5.2.1 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+</head>
+
+<body style="overflow: hidden;">
+    <div id="root" class="container-fluid">
+        <div class="row align-content-center" style="height:100%;">
+            <main class="col-12 col-sm-6 offset-sm-3 col-md-4 offset-md-4">
+                <div class="card w-100" style="min-height:200px; border-radius: 16px;">
+                    <div class="card-body p-4">
+                        <h1 class="card-title text-center pt-4 pb-4 fw-bold text-secondary-emphasis">Remote Wake-Up</h1>
+                        <form class="row" onsubmit={Submit()}>
+                            <div class="col-12 mb-3">
+                                <div class="row p-2 border-bottom">
+                                    <div class="col-6">
+                                        <p class="card-text text-secondary">RaspberryPi Status</p>
+                                    </div>
+                                    <div class="col-6 text-end">
+                                        <p id="raspberryPiStatus" class="card-text fw-bold text-success">Connected</p>
+                                    </div>
+                                </div>
+                                <div class="row p-2 border-bottom">
+                                    <div class="col-6">
+                                        <p class="card-text text-secondary">Tunnel Status</p>
+                                    </div>
+                                    <div class="col-6 text-end">
+                                        <p id="tunnelStatus" class="card-text fw-bold text-success">Connected</p>
+                                    </div>
+                                </div>
+                                <div class="row p-2 border-bottom">
+                                    <div class="col-6">
+                                        <p class="card-text text-secondary">WoL Service Status</p>
+                                    </div>
+                                    <div class="col-6 text-end">
+                                        <p id="serviceStatus" class="card-text fw-bold text-success">Running</p>
+                                    </div>
+                                </div>
+                                <div class="row p-2">
+                                    <div class="col-7">
+                                        <p class="card-text text-secondary">Service Last Updated</p>
+                                    </div>
+                                    <div class="col-5 text-end">
+                                        <p id="lastUpdated" class="card-text fw-bold text-secondary">21/07/2024</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 mt-2 mb-4">
+                                <!-- <input type="password" class="form-control" id="passwordInput" placeholder="Password"> -->
+                                <label for="passwordInput" class="form-label">Password</label>
+                                <input type="password" id="passwordInput" class="form-control"
+                                    aria-describedby="passwordHelpBlock">
+                                <div id="passwordHelpBlock" class="form-text">
+                                    Your password is encrypted and stored securely.
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <button type="button" class="w-100 btn btn-secondary border-0 bg-transparent text-black"
+                                    onclick="Refresh()">Refresh</button>
+                            </div>
+                            <div class="col-8">
+                                <button type="submit" class="w-100 btn btn-success">Send Magic Signal</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        var salt = "7oXkL45fKfcZKU0yywFmK5YQ3mZWsTRG"
+        var hashedPassword = ""
+
+        function Refresh() {
+            alert("Refreshing statuses (Not really, this is an empty frontend)");
+        }
+        
+        function Submit() {
+            event.preventDefault()
+            var passwordInputElement = document.getElementById("passwordInput")
+            
+            hash(passwordInputElement.value + salt)
+            .then((hex) => hashedPassword = hex)
+            .then(SendMagicSignal)
+            .catch(console.error);
+            
+            passwordInputElement.value = ""
+        }
+        
+        function SendMagicSignal() {
+            console.log(hashedPassword)
+            alert("Sending Magic Signal! (Not really, this is an empty frontend)");
+        }
+
+        async function hash(string) {
+            const utf8 = new TextEncoder().encode(string);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', utf8);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray
+                .map((bytes) => bytes.toString(16).padStart(2, '0'))
+                .join('');
+            return hashHex;
+        }
+    </script>
+
+    <!-- Bootstrap JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
