@@ -32,14 +32,6 @@
                                 </div>
                                 <div class="row p-2 border-bottom">
                                     <div class="col-6">
-                                        <p class="card-text text-secondary">Tunnel Status</p>
-                                    </div>
-                                    <div class="col-6 text-end">
-                                        <p id="tunnelStatus" class="card-text fw-bold text-success">Connected</p>
-                                    </div>
-                                </div>
-                                <div class="row p-2 border-bottom">
-                                    <div class="col-6">
                                         <p class="card-text text-secondary">WoL Service Status</p>
                                     </div>
                                     <div class="col-6 text-end">
@@ -83,27 +75,28 @@
         var hashedPassword = ""
 
         function HandleRefresh() {
-            alert("Refreshing statuses (Not really, this is an empty frontend)");
+            // alert("Refreshing statuses (Not really, this is an empty frontend)");
+            GetData();
         }
-        
+
         function HandleSubmit() {
             event.preventDefault()
             var passwordInputElement = document.getElementById("passwordInput")
-            
-            hash(passwordInputElement.value + salt)
-            .then((hex) => hashedPassword = hex)
-            .then(SendMagicSignal)
-            .catch(console.error);
-            
+
+            Hash(passwordInputElement.value + salt)
+                .then((hex) => hashedPassword = hex)
+                .then(SendMagicSignal)
+                .catch(console.error);
+
             passwordInputElement.value = ""
         }
-        
+
         function SendMagicSignal() {
             console.log(hashedPassword)
             alert("Sending Magic Signal! (Not really, this is an empty frontend)");
         }
 
-        async function hash(string) {
+        async function Hash(string) {
             const utf8 = new TextEncoder().encode(string);
             const hashBuffer = await crypto.subtle.digest('SHA-256', utf8);
             const hashArray = Array.from(new Uint8Array(hashBuffer));
@@ -111,6 +104,21 @@
                 .map((bytes) => bytes.toString(16).padStart(2, '0'))
                 .join('');
             return hashHex;
+        }
+
+        async function GetData() {
+            const url = "https://localhost:7215/api/status";
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Response status: ${response.status}`);
+                }
+
+                const json = await response.json();
+                console.log(json);
+            } catch (error) {
+                console.error(error.message);
+            }
         }
     </script>
 
