@@ -1,4 +1,5 @@
-﻿using server.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using server.Models;
 
 namespace server.Services
 {
@@ -10,40 +11,45 @@ namespace server.Services
 
         private readonly Dictionary<InfoItemValues, string> infoItemValueColors = new Dictionary<InfoItemValues, string>();
 
-        public ServiceManager(PasswordHandler _passwordHandler, EtherwakeHandler _etherwakeHandler) 
-        { 
+        public ServiceManager(PasswordHandler _passwordHandler, EtherwakeHandler _etherwakeHandler)
+        {
             passwordHandler = _passwordHandler;
             etherwakeHandler = _etherwakeHandler;
 
             InitializeInfoList();
         }
 
-        public InfoList GetInfoList() 
-        { 
+        public void BroadcastMagicSignal()
+        {
+            etherwakeHandler.Broadcast();
+        }
+
+        public InfoList GetInfoList()
+        {
             InfoList infoList = new InfoList();
 
-            infoList.InfoItems.Add(new InfoItem() 
-            { 
-                Label = "RaspberryPi Status", 
+            infoList.InfoItems.Add(new InfoItem()
+            {
+                Label = "RaspberryPi Status",
                 Value = InfoItemValues.Connected.ToString(),
                 ValueColorHex = infoItemValueColors[InfoItemValues.Connected],
             });
 
-            infoList.InfoItems.Add(new InfoItem() 
-            { 
-                Label = "WoL Service Status", 
+            infoList.InfoItems.Add(new InfoItem()
+            {
+                Label = "WoL Service Status",
             });
 
-            infoList.InfoItems.Add(new InfoItem() 
-            { 
-                Label = "Service Last Updated", 
+            infoList.InfoItems.Add(new InfoItem()
+            {
+                Label = "Service Last Updated",
                 Value = "23/07/2024"
             });
 
             return infoList;
         }
 
-        public InfoItem CheckStatus(int id) 
+        public InfoItem CheckStatus(int id)
         {
             InfoItem infoItem = new InfoItem();
 

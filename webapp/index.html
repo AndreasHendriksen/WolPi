@@ -72,7 +72,6 @@
 
     <script>
         var salt = "7oXkL45fKfcZKU0yywFmK5YQ3mZWsTRG"
-        var hashedPassword = ""
 
         function HandleRefresh() {
             // alert("Refreshing statuses (Not really, this is an empty frontend)");
@@ -84,16 +83,23 @@
             var passwordInputElement = document.getElementById("passwordInput")
 
             Hash(passwordInputElement.value + salt)
-                .then((hex) => hashedPassword = hex)
-                .then(SendMagicSignal)
+                .then((hex) =>
+                    fetch("https://localhost:7215/api", {
+                        method: "POST",
+                        headers: {
+                            "Accepted": "application/json",
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ password: hex }),
+                    }).then(response => {
+                        response.text().then(text => console.log(text));
+                    }))
                 .catch(console.error);
 
-            passwordInputElement.value = ""
-        }
 
-        function SendMagicSignal() {
-            console.log(hashedPassword)
-            alert("Sending Magic Signal! (Not really, this is an empty frontend)");
+
+
+            passwordInputElement.value = ""
         }
 
         async function Hash(string) {

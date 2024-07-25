@@ -24,7 +24,7 @@ namespace server.Services
         {
             User userA = new User();
             userA.Username = "admin";
-            userA.Password = "asdasd";
+            userA.Password = "2acd3216ee98303062b7b43a9ac9e5a0a5c638ff521ea2ee049047d71b8edb2f";
             users.Users.Add(userA);
 
             User userB = new User();

@@ -23,10 +23,12 @@ namespace server
 #if DEBUG
             builder.Services.AddCors(options =>
             {
-                options.AddDefaultPolicy(
-                    policy =>
+                options.AddPolicy("AllowAllOrigins",
+                    builder =>
                     {
-                        policy.WithOrigins("*");
+                        builder.AllowAnyOrigin();
+                        builder.AllowAnyHeader();
+                        builder.AllowAnyMethod();
                     });
             });
 

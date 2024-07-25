@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using server.Models;
 using server.Services;
+using System.Text.Json.Serialization;
 
 namespace server.Controllers
 {
@@ -10,13 +13,15 @@ namespace server.Controllers
     public class WoLController : ControllerBase
     {
         private readonly ServiceManager serviceManager;
+        private readonly PasswordHandler passwordHandler;
 
-        public WoLController(ServiceManager _servicemanager)
+        public WoLController(ServiceManager _servicemanager, PasswordHandler _passwordHandler)
         {
             serviceManager = _servicemanager;
+            passwordHandler = _passwordHandler;
         }
 
-        [EnableCors]
+        [EnableCors("AllowAllOrigins")]
         [HttpGet("status")]
         public ActionResult<InfoList> GetStatus()
         {
@@ -25,7 +30,7 @@ namespace server.Controllers
             return StatusCode(200, list);
         }
 
-        [EnableCors]
+        [EnableCors("AllowAllOrigins")]
         [HttpGet("status/{id}")]
         public ActionResult<InfoItem> GetStatus(int id)
         {
@@ -34,20 +39,32 @@ namespace server.Controllers
             return StatusCode(200, item);
         }
 
+        [EnableCors("AllowAllOrigins")]
         [HttpPost]
-        public ActionResult PostMagicSignal()
+        public ActionResult PostMagicSignal([FromBody] HestPassword _password)
         {
-            return StatusCode(501);
+            Console.WriteLine(JsonConvert.SerializeObject(_password));
+
+            if (_password.Password == null || _password.Password == "")
+                return BadRequest();
+
+            if (!passwordHandler.CheckPassword(_password.Password))
+                return Unauthorized();
+
+            serviceManager.BroadcastMagicSignal();
+            return Ok();
         }
 
+        [EnableCors("AllowAllOrigins")]
         [HttpPost("Update")]
         public ActionResult PostUpdate()
         {
             return StatusCode(501);
         }
 
+        [EnableCors("AllowAllOrigins")]
         [HttpPost("disable")]
-        public ActionResult PostDisable()
+        public ActionResult PostDisable([FromBody] string _password)
         {
             return StatusCode(501);
         }
