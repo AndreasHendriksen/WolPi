@@ -24,6 +24,14 @@
                             <div class="col-12 mb-3">
                                 <div class="row p-2 border-bottom">
                                     <div class="col-6">
+                                        <p class="card-text text-secondary">Tunnel Status</p>
+                                    </div>
+                                    <div class="col-6 text-end">
+                                        <p id="raspberryPiStatus" class="card-text fw-bold text-success">Connected</p>
+                                    </div>
+                                </div>
+                                <div class="row p-2 border-bottom">
+                                    <div class="col-6">
                                         <p class="card-text text-secondary">RaspberryPi Status</p>
                                     </div>
                                     <div class="col-6 text-end">
@@ -71,7 +79,8 @@
     </div>
 
     <script>
-        var salt = "7oXkL45fKfcZKU0yywFmK5YQ3mZWsTRG"
+        const salt = "7oXkL45fKfcZKU0yywFmK5YQ3mZWsTRG"
+        const baseurl = "https://langfjall.hesthest.com/api/"
 
         function HandleRefresh() {
             // alert("Refreshing statuses (Not really, this is an empty frontend)");
@@ -84,7 +93,7 @@
 
             Hash(passwordInputElement.value + salt)
                 .then((hex) =>
-                    fetch("https://localhost:7215/api", {
+                    fetch(baseurl, {
                         method: "POST",
                         headers: {
                             "Accepted": "application/json",
@@ -95,9 +104,6 @@
                         response.text().then(text => console.log(text));
                     }))
                 .catch(console.error);
-
-
-
 
             passwordInputElement.value = ""
         }
@@ -113,7 +119,7 @@
         }
 
         async function GetData() {
-            const url = "https://localhost:7215/api/status";
+            const url = baseurl + "status";
             try {
                 const response = await fetch(url);
                 if (!response.ok) {

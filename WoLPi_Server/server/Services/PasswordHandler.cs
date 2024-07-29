@@ -10,11 +10,17 @@ namespace server.Services
 
         public PasswordHandler()
         {
-            if (!File.Exists(usersFilePath))
-                InitializeUsers();
+            users = new UsersObject();
 
-            string json = File.ReadAllText(usersFilePath);
-            users = JsonConvert.DeserializeObject<UsersObject>(json);
+            if (!File.Exists(usersFilePath))
+            {
+                InitializeUsers();
+            }
+            else
+            {
+                string json = File.ReadAllText(usersFilePath);
+                users = JsonConvert.DeserializeObject<UsersObject>(json);
+            }
 
             if (users == null)
                 throw new Exception("users object is null");
