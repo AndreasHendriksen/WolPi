@@ -18,7 +18,7 @@ namespace server
 
             builder.Services.AddSingleton<ServiceManager>();
             builder.Services.AddSingleton<PasswordHandler>();
-            builder.Services.AddSingleton<EtherwakeHandler>();
+            builder.Services.AddSingleton<WolHandler>();
 
 #if DEBUG
             builder.Services.AddCors(options =>

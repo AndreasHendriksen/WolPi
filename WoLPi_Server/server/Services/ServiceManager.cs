@@ -7,11 +7,11 @@ namespace server.Services
     {
         private PasswordHandler passwordHandler;
 
-        private EtherwakeHandler etherwakeHandler;
+        private WolHandler etherwakeHandler;
 
         private readonly Dictionary<InfoItemValues, string> infoItemValueColors = new Dictionary<InfoItemValues, string>();
 
-        public ServiceManager(PasswordHandler _passwordHandler, EtherwakeHandler _etherwakeHandler)
+        public ServiceManager(PasswordHandler _passwordHandler, WolHandler _etherwakeHandler)
         {
             passwordHandler = _passwordHandler;
             etherwakeHandler = _etherwakeHandler;

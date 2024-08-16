@@ -1,0 +1,16 @@
+version: "3"
+services:
+  wolpi:
+    container_name: wolpi_server
+    network_name: "host"
+    restart: unless-stopped
+    image: thomasgreenbitcoin/wolpi_server:latest
+
+  tunnel:
+    container_name: cloudflared-tunnel
+    network_name: "host"
+    image: cloudflare/cloudflared
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=eyJhIjoiNGFkY2RkMmNhMjI5MzcwYmE4ODYxMzMxMGIzZDdiZmMiLCJ0IjoiZWQ4YWFhMjEtZjA2My00NWIxLThkY2MtNmE1ZDUxZjU2YjU2IiwicyI6Ik5XVXdZelZsWTJJdE1EVTNaaTAwWlROaUxUaGlNakV0TkRNNE9URmpPR0k1WkRReSJ9

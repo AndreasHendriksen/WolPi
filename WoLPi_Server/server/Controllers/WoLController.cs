@@ -45,11 +45,11 @@ namespace server.Controllers
         {
             Console.WriteLine(JsonConvert.SerializeObject(_password));
 
-            if (_password.Password == null || _password.Password == "")
-                return BadRequest();
+            //if (_password.Password == null || _password.Password == "")
+            //    return BadRequest();
 
-            if (!passwordHandler.CheckPassword(_password.Password))
-                return Unauthorized();
+            //if (!passwordHandler.CheckPassword(_password.Password))
+            //    return Unauthorized();
 
             serviceManager.BroadcastMagicSignal();
             return Ok();
