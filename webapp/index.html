@@ -27,7 +27,10 @@
                                         <p class="card-text text-secondary">Tunnel Status</p>
                                     </div>
                                     <div class="col-6 text-end">
-                                        <p id="raspberryPiStatus" class="card-text fw-bold text-success">Connected</p>
+                                        <p id="tunnelStatus_connected" class="card-text fw-bold text-success">Connected</p>
+                                    </div>
+                                    <div class="col-6 text-end d-none">
+                                        <p id="tunnelPiStatus_notconnected" class="card-text fw-bold text-danger">No Connection</p>
                                     </div>
                                 </div>
                                 <div class="row p-2 border-bottom">
@@ -35,7 +38,10 @@
                                         <p class="card-text text-secondary">RaspberryPi Status</p>
                                     </div>
                                     <div class="col-6 text-end">
-                                        <p id="raspberryPiStatus" class="card-text fw-bold text-success">Connected</p>
+                                        <p id="raspberryPiStatus_connected" class="card-text fw-bold text-success">Connected</p>
+                                    </div>
+                                    <div class="col-6 text-end d-none">
+                                        <p id="raspberryPiStatus_notconnected" class="card-text fw-bold text-danger">No Connection</p>
                                     </div>
                                 </div>
                                 <div class="row p-2 border-bottom">
@@ -43,7 +49,13 @@
                                         <p class="card-text text-secondary">WoL Service Status</p>
                                     </div>
                                     <div class="col-6 text-end">
-                                        <p id="serviceStatus" class="card-text fw-bold text-success">Running</p>
+                                        <p id="serviceStatus_running" class="card-text fw-bold text-success">Running</p>
+                                    </div>
+                                    <div class="col-6 text-end d-none">
+                                        <p id="serviceStatus_noaccess" class="card-text fw-bold text-danger">No Access</p>
+                                    </div>
+                                    <div class="col-6 text-end d-none">
+                                        <p id="serviceStatus_stopped" class="card-text fw-bold text-danger">Stopped</p>
                                     </div>
                                 </div>
                                 <div class="row p-2">
@@ -51,7 +63,7 @@
                                         <p class="card-text text-secondary">Service Last Updated</p>
                                     </div>
                                     <div class="col-5 text-end">
-                                        <p id="lastUpdated" class="card-text fw-bold text-secondary">21/07/2024</p>
+                                        <p id="lastUpdated" class="card-text fw-bold text-secondary">20/08/2024</p>
                                     </div>
                                 </div>
                             </div>
@@ -84,8 +96,7 @@
         // const baseurl = "http://127.0.0.1:8080/api/"
 
         function HandleRefresh() {
-            // alert("Refreshing statuses (Not really, this is an empty frontend)");
-            GetData();
+            GetStatus();
         }
 
         function HandleSubmit() {
@@ -102,9 +113,13 @@
                         },
                         body: JSON.stringify({ password: hex }),
                     }).then(response => {
-                        response.text().then(text => console.log(text));
+                        response.text().then(text => 
+                        {
+                            console.log(text);
+                            alert("Magic signal sent!")
+                        });
                     }))
-                .catch(console.error);
+                .catch(console.error).then(() => alert("Whoops! Something, went wrong."));
 
             passwordInputElement.value = ""
         }
@@ -119,7 +134,7 @@
             return hashHex;
         }
 
-        async function GetData() {
+        async function GetStatus() {
             const url = baseurl + "status";
             try {
                 const response = await fetch(url);
@@ -129,8 +144,13 @@
 
                 const json = await response.json();
                 console.log(json);
+
+
+
+                return json;
             } catch (error) {
                 console.error(error.message);
+                document.getElementById()
             }
         }
     </script>

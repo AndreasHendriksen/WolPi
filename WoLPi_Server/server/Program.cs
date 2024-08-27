@@ -20,7 +20,6 @@ namespace server
             builder.Services.AddSingleton<PasswordHandler>();
             builder.Services.AddSingleton<WolHandler>();
 
-#if DEBUG
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAllOrigins",
@@ -33,7 +32,7 @@ namespace server
             });
 
             var app = builder.Build();
-#endif
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

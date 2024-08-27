@@ -26,18 +26,23 @@ namespace server.Services
                 throw new Exception("users object is null");
         }
 
-        public void InitializeUsers()
+        void InitializeUsers()
         {
-            User userA = new User();
-            userA.Username = "admin";
-            userA.Password = "2acd3216ee98303062b7b43a9ac9e5a0a5c638ff521ea2ee049047d71b8edb2f";
-            users.Users.Add(userA);
+            //User userA = new User();
+            //userA.Username = "admin";
+            //userA.Password = "7722a1de1d8b8dad950e3b92d9c6c7c5ba6f50db54b8fe79625ca024d4765001";
+            //users.Users.Add(userA);
 
             User userB = new User();
             userB.Username = "Otter";
-            userB.Password = "dsadsa";
+            userB.Password = "fe65935667f0a3e9fa5745aa5147f33b281111263178286f368a803dffeb704e";
             users.Users.Add(userB);
 
+            WriteUsers();
+        }
+
+        void WriteUsers()
+        {
             string json = JsonConvert.SerializeObject(users);
             File.WriteAllText(usersFilePath, json);
         }
@@ -46,6 +51,12 @@ namespace server.Services
         {
             User? user = users.Users.Find((x) => x.Password == _password);
             return user != null;
+        }
+
+        public void ChangePassword(string _password)
+        {
+            users.Users[0].Password = _password;
+            WriteUsers();
         }
 
         private class UsersObject

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using server.DTOs;
 using server.Models;
 using server.Services;
 using System.Text.Json.Serialization;
@@ -41,30 +42,30 @@ namespace server.Controllers
 
         [EnableCors("AllowAllOrigins")]
         [HttpPost]
-        public ActionResult PostMagicSignal([FromBody] HestPassword _password)
+        public ActionResult PostMagicSignal([FromBody] Password_DTO _password)
         {
             Console.WriteLine(JsonConvert.SerializeObject(_password));
 
-            //if (_password.Password == null || _password.Password == "")
-            //    return BadRequest();
+            if (_password.Password == null || _password.Password == "")
+                return BadRequest();
 
-            //if (!passwordHandler.CheckPassword(_password.Password))
-            //    return Unauthorized();
+            if (!passwordHandler.CheckPassword(_password.Password))
+                return Unauthorized();
 
             serviceManager.BroadcastMagicSignal();
             return Ok();
         }
 
         [EnableCors("AllowAllOrigins")]
-        [HttpPost("Update")]
-        public ActionResult PostUpdate()
+        [HttpPost("update")]
+        public ActionResult PostUpdate([FromBody] Password_DTO _password)
         {
             return StatusCode(501);
         }
 
         [EnableCors("AllowAllOrigins")]
         [HttpPost("disable")]
-        public ActionResult PostDisable([FromBody] string _password)
+        public ActionResult PostDisable([FromBody] Password_DTO _password)
         {
             return StatusCode(501);
         }

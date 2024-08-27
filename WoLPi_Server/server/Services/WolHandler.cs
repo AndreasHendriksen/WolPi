@@ -1,6 +1,9 @@
 ﻿using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Net;
+using CliWrap;
+using System.Diagnostics;
+using System.Net.Mail;
 
 namespace server.Services
 {
@@ -10,26 +13,31 @@ namespace server.Services
         {
             try
             {
-                PhysicalAddress target = PhysicalAddress.Parse("2C:FD:A1:BB:A1:F6");
-                //PhysicalAddress target = PhysicalAddress.Parse("00:21:70:c2:c1:88");
+                ProcessStartInfo processStartInfo = new ProcessStartInfo
+                {
+                    FileName = "/usr/sbin/etherwake",
+                    Arguments = "2C:FD:A1:BB:A1:F6",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                };
 
-                SendWakeOnLan(target);
+                using (Process process = new Process())
+                {
+                    process.StartInfo = processStartInfo;
+                    process.Start();
+
+                    string output = process.StandardOutput.ReadToEnd();
+                    string error = process.StandardError.ReadToEnd();
+
+                    process.WaitForExit();
+                }
             }
-            catch (Exception x) { Console.WriteLine(x.Message); }
-        }
-
-        void SendWakeOnLan(PhysicalAddress target)
-        {
-            var header = Enumerable.Repeat(byte.MaxValue, 6);
-            var data = Enumerable.Repeat(target.GetAddressBytes(), 16).SelectMany(mac => mac);
-
-            var magicPacket = header.Concat(data).ToArray();
-
-            Console.WriteLine(magicPacket);
-
-            using var client = new UdpClient();
-
-            client.Send(magicPacket, magicPacket.Length, new IPEndPoint(IPAddress.Broadcast, 9));
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
     }
 }
