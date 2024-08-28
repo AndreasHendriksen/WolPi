@@ -16,7 +16,7 @@ namespace server.Services
                 ProcessStartInfo processStartInfo = new ProcessStartInfo
                 {
                     FileName = "/usr/sbin/etherwake",
-                    Arguments = "2C:FD:A1:BB:A1:F6",
+                    Arguments = "00:D8:61:D7:4D:C9",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     UseShellExecute = false,
